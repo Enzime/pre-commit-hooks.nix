@@ -267,7 +267,7 @@ in
 
               ${
                 lib.concatStringsSep
-                  "\n" 
+                  "\n"
                   (lib.mapAttrsToList
                     (hookName: hookConf:
                       ''
@@ -422,6 +422,7 @@ in
                 for hook in $hooks; do
                   pre-commit uninstall -t $hook
                 done
+                ${git}/bin/git config --local core.hooksPath ""
                 # Add hooks for configured stages (only) ...
                 if [ ! -z "${concatStringsSep " " install_stages}" ]; then
                   for stage in ${concatStringsSep " " install_stages}; do
@@ -447,6 +448,7 @@ in
                 else
                   pre-commit install
                 fi
+                ${git}/bin/git config --local core.hooksPath "$(${git}/bin/git rev-parse --git-common-dir)/hooks"
               fi
             fi
           fi
